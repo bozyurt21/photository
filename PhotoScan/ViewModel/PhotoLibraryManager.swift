@@ -51,9 +51,7 @@ class PhotoLibraryManager : ObservableObject {
         }
         
 
-        func fetchImage(for appPhoto: AppPhoto,
-                        targetSize: CGSize,
-                        completion: @escaping (UIImage?) -> Void) {
+        func fetchImage(for appPhoto: AppPhoto,targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
             let options = PHImageRequestOptions()
             options.isSynchronous = false
             options.deliveryMode = .opportunistic

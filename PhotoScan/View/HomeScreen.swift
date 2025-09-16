@@ -9,8 +9,10 @@ import SwiftUI
 import Photos
 
 struct HomeScreen: View {
+    
     @StateObject private var viewModel = PhotoLibraryManager()
     @State private var showingPicker = false
+    
     var body: some View {
         VStack {
             ScrollView {
