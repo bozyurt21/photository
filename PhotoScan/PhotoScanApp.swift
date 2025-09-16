@@ -11,7 +11,7 @@ import SwiftUI
 struct PhotoScanApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeScreen()
         }
     }
 }

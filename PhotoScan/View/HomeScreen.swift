@@ -10,22 +10,29 @@ import Photos
 
 struct HomeScreen: View {
     @StateObject private var viewModel = PhotoLibraryManager()
+    @State private var showingPicker = false
     var body: some View {
         VStack {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
-                    ForEach(viewModel.photos) { appPhoto in
-                        PhotoView(asset: appPhoto.asset)
+                    ForEach(viewModel.appPhotos) { appPhoto in
+                        PhotoView(appPhoto: appPhoto, viewModel: viewModel)
                     }
                 }
             }
-            Button("+Add Image") {
-                viewModel.fetchPhotos()
+
+            Button("+ Add Image") {
+                showingPicker = true
             }
             .padding(10)
             .foregroundColor(.black)
             .background(.cyan)
             .clipShape(RoundedRectangle(cornerRadius: 24))
+            .sheet(isPresented: $showingPicker) {
+                PhotoPicker { asset in
+                    viewModel.addAsset(asset)
+                }
+            }
         }
     }
     
