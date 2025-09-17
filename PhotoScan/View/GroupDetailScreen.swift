@@ -8,8 +8,32 @@
 import SwiftUI
 
 struct GroupDetailScreen: View {
+    @StateObject private var viewModel = PhotoLibraryManager()
+    private let flexibleColumn = [
+            GridItem(.fixed(120)),
+            GridItem(.fixed(120)),
+            GridItem(.fixed(120))
+    ]
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            LazyVGrid(columns: flexibleColumn, spacing: 20) {
+                ForEach(viewModel.appPhotos) { appPhoto in
+                    VStack {
+                        PhotoView(appPhoto: appPhoto, viewModel: viewModel)
+                        if let group = appPhoto.group {
+                            Text(group.rawValue)
+                        }
+                        else {
+                            Text("Others")
+                        }
+                    }
+                    
+                }
+            }
+            
+        }
+        
+        
     }
 }
 

@@ -22,15 +22,17 @@ class PhotoLibraryManager : ObservableObject {
         
 
         func addAsset(_ asset: PHAsset) {
-            let hash = asset.reliableHash()
-            let group = PhotoGroup.group(for: hash)
-            // TODO : Some notification could be added (maybe since I do not want to make a lot of notifications)
-            if appPhotos.contains(where: { $0.id == asset.localIdentifier }) {
-                return
+            DispatchQueue.main.async  {
+                let hash = asset.reliableHash()
+                let group = PhotoGroup.group(for: hash)
+                // TODO : Some notification could be added (maybe since I do not want to make a lot of notifications)
+                if self.appPhotos.contains(where: { $0.id == asset.localIdentifier }) {
+                    return
+                }
+                let newPhoto = AppPhoto(id: asset.localIdentifier, group: group)
+                self.appPhotos.append(newPhoto)
+                self.savePhotos()
             }
-            let newPhoto = AppPhoto(id: asset.localIdentifier, group: group)
-            appPhotos.append(newPhoto)
-            savePhotos()
         }
         
         private func savePhotos() {

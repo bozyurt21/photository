@@ -14,31 +14,13 @@ struct HomeScreen: View {
     @State private var showingPicker = false
     
     private let flexibleColumn = [
-            
-            GridItem(.flexible(minimum: 100, maximum: 200)),
-            GridItem(.flexible(minimum: 100, maximum: 200)),
-            GridItem(.flexible(minimum: 100, maximum: 200))
+            GridItem(.fixed(120)),
+            GridItem(.fixed(120)),
+            GridItem(.fixed(120))
         ]
     
     var body: some View {
         VStack {
-            ScrollView {
-                LazyVGrid(columns: flexibleColumn, spacing: 20) {
-                    ForEach(viewModel.appPhotos) { appPhoto in
-                        VStack {
-                            PhotoView(appPhoto: appPhoto, viewModel: viewModel)
-                            if let group = appPhoto.group {
-                                Text(group.rawValue)
-                            }
-                            else {
-                                Text("Others")
-                            }
-                        }
-                        
-                    }
-                }
-                
-            }
             
             Button("+ Add Image") {
                 // I want to gave the request before th picker opens because otherwise the images added didn't shown directly

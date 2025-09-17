@@ -13,22 +13,27 @@ struct PhotoView: View {
     @ObservedObject var viewModel: PhotoLibraryManager
     @State private var image: UIImage?
     var body: some View {
-        Group {
-                if let image = image {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
-                        .clipped()
-                        
-                } else {
-                    Color.gray.opacity(0.3) // if photo does not exist then we are going to show an gray color.
+        ZStack {
+                    if let image = image {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()     // fill the frame
+                            .frame(width: 120, height: 120) // make all cells equal
+                            .clipped()
+                            .cornerRadius(10)    // optional: rounded corners
+                    } else {
+                        Color.gray.opacity(0.3)
+                            .frame(width: 120, height: 120)
+                            .cornerRadius(8)
+                    }
                 }
-        }
-        .frame(width: 100, height: 100)
-        .onAppear {
-            viewModel.fetchImage(for: appPhoto, targetSize: CGSize(width: 100, height: 100)) { img in
-                self.image = img
-            }
-        }
+                .onAppear {
+                    viewModel.fetchImage(
+                        for: appPhoto,
+                        targetSize: CGSize(width: 300, height: 300) // fetch a slightly bigger image for clarity
+                    ) { img in
+                        self.image = img
+                    }
+                }
     }
 }
