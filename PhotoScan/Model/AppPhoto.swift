@@ -8,8 +8,8 @@
 import Foundation
 import Photos
 
-struct AppPhoto: Identifiable{
+struct AppPhoto: Identifiable, Codable{
     let id: String            // since it is identifiable, we need to add id
-    let asset: PHAsset    // we are going to group the photos so this is also needed
-    //MARK: - Add creation date later
+    //let asset: PHAsset    // we are going to group the photos so this is also needed
+    var group : PhotoGroup?
 }

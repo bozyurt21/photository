@@ -22,32 +22,32 @@ class PhotoLibraryManager : ObservableObject {
         
 
         func addAsset(_ asset: PHAsset) {
-            let newPhoto = AppPhoto(id: asset.localIdentifier, asset: asset)
+            let hash = asset.reliableHash()
+            let group = PhotoGroup.group(for: hash)
+            // TODO : Some notification could be added (maybe since I do not want to make a lot of notifications)
+            if appPhotos.contains(where: { $0.id == asset.localIdentifier }) {
+                return
+            }
+            let newPhoto = AppPhoto(id: asset.localIdentifier, group: group)
             appPhotos.append(newPhoto)
             savePhotos()
         }
         
         private func savePhotos() {
-            let identifiers = appPhotos.map { $0.id }
-            if let data = try? JSONEncoder().encode(identifiers) {
+            if let data = try? JSONEncoder().encode(appPhotos) {
                 try? data.write(to: storageURL)
             }
         }
         
 
         private func loadPhotos() {
-            guard let data = try? Data(contentsOf: storageURL),
-                  let identifiers = try? JSONDecoder().decode([String].self, from: data)
-            else { return }
-            
-            let assets = PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: nil)
-            
-            var restored: [AppPhoto] = []
-            assets.enumerateObjects { asset, _, _ in
-                restored.append(AppPhoto(id: asset.localIdentifier, asset: asset))
+            if let data = try? Data(contentsOf: storageURL),let decoded = try? JSONDecoder().decode([AppPhoto].self, from: data) {
+                appPhotos = decoded
+            }
+            else {
+                return
             }
             
-            appPhotos = restored
         }
         
 
@@ -55,15 +55,22 @@ class PhotoLibraryManager : ObservableObject {
             let options = PHImageRequestOptions()
             options.isSynchronous = false
             options.deliveryMode = .opportunistic
-            
-            PHImageManager.default().requestImage(
-                for: appPhoto.asset,
-                targetSize: targetSize,
-                contentMode: .aspectFill,
-                options: options
-            ) { image, _ in
-                completion(image)
+            let assets = PHAsset.fetchAssets(withLocalIdentifiers: [appPhoto.id], options: nil)
+            if let asset = assets.firstObject {
+                PHImageManager.default().requestImage(
+                    for: asset,
+                    targetSize: targetSize,
+                    contentMode: .aspectFill,
+                    options: options
+                ) { image, _ in
+                    completion(image)
+                }
             }
+            else {
+                completion(nil)
+                return
+            }
+            
         }
 
 }
