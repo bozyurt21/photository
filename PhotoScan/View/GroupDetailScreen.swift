@@ -18,7 +18,7 @@ struct GroupDetailScreen: View {
     ]
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: flexibleColumn, spacing: 20) {
+            LazyVGrid(columns: flexibleColumn, spacing: 10) {
                 if group == nil {
                     ForEach(viewModel.appPhotos.filter { $0.group == nil}) { appPhoto in
                         VStack {

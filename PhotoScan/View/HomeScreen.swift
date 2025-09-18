@@ -27,7 +27,7 @@ class HomeScreen: UIViewController {
     
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
-        let spacing: CGFloat = 16
+        let spacing: CGFloat = 10
         let itemWidth = (view.bounds.width - (spacing * 4)) / 3
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
         layout.minimumInteritemSpacing = spacing
@@ -67,7 +67,7 @@ class HomeScreen: UIViewController {
     
     private func setupAddButton() {
         let addButton = UIButton(type: .system)
-        addButton.setTitle("+ Add Image", for: .normal)
+        addButton.setTitle("+ Add Images", for: .normal)
         addButton.setTitleColor(.white, for: .normal)
         addButton.backgroundColor = UIColor(named: "mainColor")
         addButton.layer.cornerRadius = 12
