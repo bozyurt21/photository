@@ -16,25 +16,34 @@ struct GroupDetailScreen: View {
             GridItem(.fixed(120)),
             GridItem(.fixed(120))
     ]
+    
+    // Filtering Photos in here
+    var photos : [AppPhoto] {
+        if let group = group {
+            return viewModel.appPhotos.filter { $0.group == group }
+        }
+        else {
+            return viewModel.appPhotos.filter { $0.group == nil}
+        }
+    }
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: flexibleColumn, spacing: 10) {
-                if group == nil {
-                    ForEach(viewModel.appPhotos.filter { $0.group == nil}) { appPhoto in
+                LazyVGrid(columns: flexibleColumn, spacing: 10) {
+                    ForEach(Array(photos.enumerated()), id: \.element.id) { (index, appPhoto) in
                         VStack {
-                            PhotoView(appPhoto: appPhoto, viewModel: viewModel)
+                            NavigationLink {
+                                ImageDetailScreen(photos: photos, startIndex: index, viewModel: viewModel)
+                            }
+                            label: {
+                                PhotoView(appPhoto: appPhoto, viewModel: viewModel)
+                                }
+                            }
                         }
-                   }
-                }
-                ForEach(viewModel.appPhotos.filter { $0.group == group }) { appPhoto in
-                    VStack {
-                        PhotoView(appPhoto: appPhoto, viewModel: viewModel)
                     }
-               }
-            }
-        }
-        .navigationTitle(group?.rawValue ?? "Others")
+                }
+        .navigationTitle(group?.rawValue.uppercased() ?? "Others")
     }
+        
 }
 
 

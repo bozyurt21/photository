@@ -27,9 +27,9 @@ class HomeScreen: UIViewController {
     
     private func setupCollectionView() {
         let layout = UICollectionViewFlowLayout()
-        let spacing: CGFloat = 10
+        let spacing: CGFloat = 20
         let itemWidth = (view.bounds.width - (spacing * 4)) / 3
-        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+        layout.itemSize = CGSize(width: itemWidth, height: 140)
         layout.minimumInteritemSpacing = spacing
         layout.minimumLineSpacing = spacing
             
@@ -39,7 +39,7 @@ class HomeScreen: UIViewController {
         collectionView.dataSource = self
         collectionView.backgroundColor = .systemBackground
         collectionView.register(FolderCell.self, forCellWithReuseIdentifier: "FolderCell")
-            
+        collectionView.contentInset = UIEdgeInsets(top: 30, left: 0, bottom: 100, right: 0)
         view.addSubview(collectionView)
             
         NSLayoutConstraint.activate([
@@ -51,18 +51,16 @@ class HomeScreen: UIViewController {
     }
     
     private func loadGroups() {
-            // Example: filter groups that actually have photos
-            groups = viewModel.appPhotos
-                .compactMap { $0.group }
-                .reduce(into: Set<PhotoGroup>()) { $0.insert($1) }
-                .sorted { $0.rawValue < $1.rawValue }
+        groups = viewModel.appPhotos
+            .compactMap { $0.group }
+            .reduce(into: Set<PhotoGroup>()) { $0.insert($1) }
+            .sorted { $0.rawValue < $1.rawValue }
             
-            // Always include "Others" if needed
-            if viewModel.appPhotos.contains(where: { $0.group == nil }) {
-                groups.append(nil)
-            }
+        if viewModel.appPhotos.contains(where: { $0.group == nil }) {
+            groups.append(nil)
+        }
             
-            collectionView.reloadData()
+        collectionView.reloadData()
     }
     
     private func setupAddButton() {
