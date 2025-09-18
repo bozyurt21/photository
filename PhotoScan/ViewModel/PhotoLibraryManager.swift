@@ -12,62 +12,61 @@ import SwiftUI
 class PhotoLibraryManager : ObservableObject {
     @Published var appPhotos: [AppPhoto] = []
         
-        private let storageURL: URL
+    private let storageURL: URL
         
-        init() {
-            let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            storageURL = docs.appendingPathComponent("savedPhotos.json")
-            loadPhotos()
-        }
+    init() {
+        let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        storageURL = docs.appendingPathComponent("savedPhotos.json")
+        loadPhotos()
+    }
         
 
-        func addAsset(_ asset: PHAsset) {
-            DispatchQueue.main.async  {
-                let hash = asset.reliableHash()
-                let group = PhotoGroup.group(for: hash)
-                // TODO : Some notification could be added (maybe since I do not want to make a lot of notifications)
-                if !self.appPhotos.contains(where: { $0.id == asset.localIdentifier }) {
-                    let newPhoto = AppPhoto(id: asset.localIdentifier, group: group)
-                    self.appPhotos.append(newPhoto)
-                    self.savePhotos()
-                }
+    func addAsset(_ asset: PHAsset) {
+        DispatchQueue.main.async  {
+            let hash = asset.reliableHash()
+            let group = PhotoGroup.group(for: hash)
+            // TODO : Some notification could be added (maybe since I do not want to make a lot of notifications)
+            if !self.appPhotos.contains(where: { $0.id == asset.localIdentifier }) {
+                let newPhoto = AppPhoto(id: asset.localIdentifier, group: group)
+                self.appPhotos.append(newPhoto)
+                self.savePhotos()
+            }
                
-            }
         }
+    }
         
-        private func savePhotos() {
-            if let data = try? JSONEncoder().encode(appPhotos) {
-                try? data.write(to: storageURL)
-            }
+    private func savePhotos() {
+        if let data = try? JSONEncoder().encode(appPhotos) {
+            try? data.write(to: storageURL)
         }
+    }
         
-        private func loadPhotos() {
-            if let data = try? Data(contentsOf: storageURL),let decoded = try? JSONDecoder().decode([AppPhoto].self, from: data) {
-                appPhotos = decoded
-            }
+    private func loadPhotos() {
+        if let data = try? Data(contentsOf: storageURL),let decoded = try? JSONDecoder().decode([AppPhoto].self, from: data) {
+            appPhotos = decoded
         }
+    }
         
 
-        func fetchImage(for appPhoto: AppPhoto,targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
-            let options = PHImageRequestOptions()
-            options.isSynchronous = false
-            options.deliveryMode = .opportunistic
-            let assets = PHAsset.fetchAssets(withLocalIdentifiers: [appPhoto.id], options: nil)
-            if let asset = assets.firstObject {
-                PHImageManager.default().requestImage(
-                    for: asset,
-                    targetSize: targetSize,
-                    contentMode: .aspectFill,
-                    options: options
-                ) { image, _ in
-                    completion(image)
-                }
+    func fetchImage(for appPhoto: AppPhoto,targetSize: CGSize, completion: @escaping (UIImage?) -> Void) {
+        let options = PHImageRequestOptions()
+        options.isSynchronous = false
+        options.deliveryMode = .opportunistic
+        let assets = PHAsset.fetchAssets(withLocalIdentifiers: [appPhoto.id], options: nil)
+        if let asset = assets.firstObject {
+            PHImageManager.default().requestImage(
+                for: asset,
+                targetSize: targetSize,
+                contentMode: .aspectFill,
+                options: options
+            ) { image, _ in
+                completion(image)
             }
-            else {
-                completion(nil)
-                return
-            }
-            
         }
+        else {
+            completion(nil)
+        }
+            
+    }
 
 }
