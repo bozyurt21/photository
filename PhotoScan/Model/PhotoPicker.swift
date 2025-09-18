@@ -46,6 +46,7 @@ struct PhotoPicker: UIViewControllerRepresentable {
             }
                 
             parent.onComplete(collected)
+            picker.dismiss(animated: true)
          }
     }
 }

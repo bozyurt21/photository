@@ -11,7 +11,16 @@ import SwiftUI
 struct PhotoScanApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeScreen()
+            UIKitRootView()
         }
     }
+}
+
+struct UIKitRootView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UINavigationController {
+        let homeVC = HomeScreen()
+        return UINavigationController(rootViewController: homeVC)
+    }
+    
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
 }

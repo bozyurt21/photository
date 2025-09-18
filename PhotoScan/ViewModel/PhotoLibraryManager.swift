@@ -26,12 +26,12 @@ class PhotoLibraryManager : ObservableObject {
                 let hash = asset.reliableHash()
                 let group = PhotoGroup.group(for: hash)
                 // TODO : Some notification could be added (maybe since I do not want to make a lot of notifications)
-                if self.appPhotos.contains(where: { $0.id == asset.localIdentifier }) {
-                    return
+                if !self.appPhotos.contains(where: { $0.id == asset.localIdentifier }) {
+                    let newPhoto = AppPhoto(id: asset.localIdentifier, group: group)
+                    self.appPhotos.append(newPhoto)
+                    self.savePhotos()
                 }
-                let newPhoto = AppPhoto(id: asset.localIdentifier, group: group)
-                self.appPhotos.append(newPhoto)
-                self.savePhotos()
+               
             }
         }
         
@@ -41,15 +41,10 @@ class PhotoLibraryManager : ObservableObject {
             }
         }
         
-
         private func loadPhotos() {
             if let data = try? Data(contentsOf: storageURL),let decoded = try? JSONDecoder().decode([AppPhoto].self, from: data) {
                 appPhotos = decoded
             }
-            else {
-                return
-            }
-            
         }
         
 

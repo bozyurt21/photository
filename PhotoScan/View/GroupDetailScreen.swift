@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct GroupDetailScreen: View {
-    @StateObject private var viewModel = PhotoLibraryManager()
+    let group: PhotoGroup?
+    @ObservedObject var viewModel: PhotoLibraryManager
+    
     private let flexibleColumn = [
             GridItem(.fixed(120)),
             GridItem(.fixed(120)),
@@ -17,26 +19,22 @@ struct GroupDetailScreen: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: flexibleColumn, spacing: 20) {
-                ForEach(viewModel.appPhotos) { appPhoto in
+                if group == nil {
+                    ForEach(viewModel.appPhotos.filter { $0.group == nil}) { appPhoto in
+                        VStack {
+                            PhotoView(appPhoto: appPhoto, viewModel: viewModel)
+                        }
+                   }
+                }
+                ForEach(viewModel.appPhotos.filter { $0.group == group }) { appPhoto in
                     VStack {
                         PhotoView(appPhoto: appPhoto, viewModel: viewModel)
-                        if let group = appPhoto.group {
-                            Text(group.rawValue)
-                        }
-                        else {
-                            Text("Others")
-                        }
                     }
-                    
-                }
+               }
             }
-            
         }
-        
-        
+        .navigationTitle(group?.rawValue ?? "Others")
     }
 }
 
-#Preview {
-    GroupDetailScreen()
-}
+
