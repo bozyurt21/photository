@@ -23,7 +23,8 @@ struct PhotoPicker: UIViewControllerRepresentable {
         return picker
     }
 
-    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -31,6 +32,7 @@ struct PhotoPicker: UIViewControllerRepresentable {
 
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
         let parent: PhotoPicker
+        var alert : UIAlertController?
 
         init(_ parent: PhotoPicker) {
             self.parent = parent
@@ -43,10 +45,11 @@ struct PhotoPicker: UIViewControllerRepresentable {
             var collected: [PHAsset] = []
             assets.enumerateObjects { asset, _, _ in
                 collected.append(asset)
-            }
                 
+            }
             parent.onComplete(collected)
             picker.dismiss(animated: true)
+            
          }
     }
 }

@@ -15,6 +15,7 @@ class HomeScreen: UIViewController {
     private var collectionView: UICollectionView!
     private var groups: [PhotoGroup?] = []
     private let viewModel = PhotoLibraryManager()
+    private var progressBar : DownloadProgressBarController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,10 +88,25 @@ class HomeScreen: UIViewController {
             if status == .authorized || status == .limited {
                 DispatchQueue.main.async {
                     let picker = PhotoPicker { assets in
-                        for asset in assets {
-                            self.viewModel.addAsset(asset)
+                        self.dismiss(animated: true) {
+                            self.showProgress(total: assets.count)
+                            DispatchQueue.global(qos: .userInitiated).async {
+                                var processed = 0
+                                for asset in assets {
+                                    self.viewModel.addAsset(asset)
+                                    processed+=1
+                                    DispatchQueue.main.async {
+                                        self.progressBar?.updateProgress(processed: processed, total: assets.count)
+                                    }
+                                }
+                                DispatchQueue.main.async {
+                                    self.loadGroups()
+                                    self.hideProgress()
+                                }
+                            }
                         }
-                        self.loadGroups()
+                        
+                        
                     }
                     let hostingPicker = UIHostingController(rootView: picker)
                     hostingPicker.modalPresentationStyle = .pageSheet
@@ -99,6 +115,21 @@ class HomeScreen: UIViewController {
             }
         }
     }
+    
+    private func showProgress(total: Int) {
+            let vc = DownloadProgressBarController()
+            vc.modalPresentationStyle = .overFullScreen
+            present(vc, animated: true)
+            progressBar = vc
+        }
+
+        private func hideProgress() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.progressBar?.dismiss(animated: true)
+                self.progressBar = nil
+            }
+        }
+    
     
     
 }
