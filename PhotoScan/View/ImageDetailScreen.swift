@@ -26,7 +26,7 @@ struct ImageDetailScreen: View {
                         .tag(index)
                 }
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic)) // swipeable
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .navigationBarTitleDisplayMode(.inline)
     }
 }
