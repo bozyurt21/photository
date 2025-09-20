@@ -144,7 +144,8 @@ extension HomeScreen : UICollectionViewDataSource, UICollectionViewDelegate {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FolderCell", for: indexPath) as! FolderCell
         let group = groups[indexPath.row]
-        cell.configure(with: group)
+        let photos = viewModel.appPhotos.filter { $0.group == group }
+        cell.configure(with: group, total: photos.count)
         return cell
     }
     
