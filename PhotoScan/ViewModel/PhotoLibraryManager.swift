@@ -11,6 +11,7 @@ import SwiftUI
 
 class PhotoLibraryManager : ObservableObject {
     @Published var appPhotos: [AppPhoto] = []
+    private var processed  = 0
         
     private let storageURL: URL
         
@@ -24,7 +25,6 @@ class PhotoLibraryManager : ObservableObject {
     func addAsset(_ asset: PHAsset, total: Int, progressHandler: @escaping (Int, Int)->Void, completion: @escaping () -> Void) {
         let targetSize = CGSize(width: 300, height: 300)
         let options = PHImageRequestOptions()
-        var processed = -(appPhotos.count)
         options.isSynchronous = false
         options.deliveryMode = .highQualityFormat
         PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFit, options: options) { image, _ in
@@ -36,10 +36,13 @@ class PhotoLibraryManager : ObservableObject {
                     let newPhoto = AppPhoto(id: asset.localIdentifier, group: group)
                     self.appPhotos.append(newPhoto)
                     self.savePhotos()
+                    self.processed += 1
                 }
-                processed += self.appPhotos.count
-                progressHandler(processed, total)
-                if processed == total {
+                else {
+                    self.processed += 1
+                }
+                progressHandler(self.processed, total)
+                if self.processed == total {
                     completion()
                 }
                 
