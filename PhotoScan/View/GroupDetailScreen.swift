@@ -41,7 +41,7 @@ struct GroupDetailScreen: View {
                         }
                     }
                 }
-        .navigationTitle(group?.rawValue.uppercased() ?? "Others")
+        .navigationTitle("\(group?.rawValue.uppercased() ?? "Others")  (\(photos.count) images)")
     }
         
 }
