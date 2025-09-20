@@ -89,24 +89,34 @@ class HomeScreen: UIViewController {
                 DispatchQueue.main.async {
                     let picker = PhotoPicker { assets in
                         self.dismiss(animated: true) {
-                            self.showProgress(total: assets.count)
-                            DispatchQueue.global(qos: .userInitiated).async {
-                                var processed = 0
-                                for asset in assets {
-                                    self.viewModel.addAsset(asset)
-                                    processed+=1
-                                    DispatchQueue.main.async {
-                                        self.progressBar?.updateProgress(processed: processed, total: assets.count)
+                            if assets.count > 0 {
+                                self.showProgress(total: assets.count)
+                                DispatchQueue.global(qos: .userInitiated).async {
+                                    var processed = 0
+                                    for asset in assets {
+                                        self.viewModel.addAsset(asset, total: assets.count, progressHandler: { current, total in
+                                            processed += 1
+                                            DispatchQueue.main.async {
+                                                self.progressBar?.updateProgress(processed: processed, total: total)
+                                            }
+                                        },completion: {
+                                            DispatchQueue.main.async {
+                                                self.loadGroups()
+                                                self.hideProgress()
+                                            }
+                                        })
+                                        
                                     }
+                                    
                                 }
-                                DispatchQueue.main.async {
-                                    self.loadGroups()
+                            }
+                            else {
+                                if self.progressBar != nil {
                                     self.hideProgress()
                                 }
                             }
+                            
                         }
-                        
-                        
                     }
                     let hostingPicker = UIHostingController(rootView: picker)
                     hostingPicker.modalPresentationStyle = .pageSheet
