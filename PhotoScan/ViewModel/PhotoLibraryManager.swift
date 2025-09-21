@@ -11,10 +11,10 @@ import SwiftUI
 
 class PhotoLibraryManager : ObservableObject {
     @Published var appPhotos: [AppPhoto] = []
-    private var processed  = 0
-        
     private let storageURL: URL
-        
+    private var processed  = 0
+    private var alreadyProcessed = 0
+    
     init() {
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         storageURL = docs.appendingPathComponent("savedPhotos.json")
@@ -39,10 +39,10 @@ class PhotoLibraryManager : ObservableObject {
                     self.processed += 1
                 }
                 else {
-                    self.processed += 1
+                    self.alreadyProcessed += 1
                 }
-                progressHandler(self.processed, total)
-                if self.processed == total {
+                progressHandler(self.processed, total - self.alreadyProcessed)
+                if self.processed == (total - self.alreadyProcessed){
                     completion()
                 }
                 
@@ -81,9 +81,6 @@ class PhotoLibraryManager : ObservableObject {
             ) { image, _ in
                 completion(image)
             }
-        }
-        else {
-            completion(nil)
         }
             
     }
