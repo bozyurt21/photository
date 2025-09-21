@@ -26,6 +26,7 @@ struct GroupDetailScreen: View {
             return viewModel.appPhotos.filter { $0.group == nil}
         }
     }
+    
     var body: some View {
         ScrollView {
                 LazyVGrid(columns: flexibleColumn, spacing: 10) {
