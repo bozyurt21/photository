@@ -100,14 +100,11 @@ class HomeScreen: UIViewController {
                                             print("\(processed)/\(total)")
                                             DispatchQueue.main.async {
                                                 self.progressBar?.updateProgress(processed: processed, total: total)
-                                                if processed == total {
-                                                    self.collectionView?.reloadData()
-                                                    self.loadGroups()
-                                                }
+                                                self.collectionView?.reloadData()
+                                                self.loadGroups()
                                             }
                                         },completion: {
                                             DispatchQueue.main.async {
-                                                //self.loadGroups()
                                                 self.hideProgress()
                                             }
                                         })

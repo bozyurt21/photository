@@ -11,7 +11,6 @@ import PhotosUI
 
 struct PhotoPicker: UIViewControllerRepresentable {
     var onComplete: ([PHAsset]) -> Void
-
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration(photoLibrary: .shared())
         config.selectionLimit = 0 // 0 means unlimited selection
@@ -32,7 +31,6 @@ struct PhotoPicker: UIViewControllerRepresentable {
 
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
         let parent: PhotoPicker
-        var alert : UIAlertController?
 
         init(_ parent: PhotoPicker) {
             self.parent = parent
