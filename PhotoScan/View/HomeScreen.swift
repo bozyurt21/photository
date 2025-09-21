@@ -19,7 +19,7 @@ class HomeScreen: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Group Folders"
+        title = "Group Folders \(viewModel.appPhotos.count)"
         view.backgroundColor = .systemBackground
         setupCollectionView()
         loadGroups()
@@ -60,9 +60,10 @@ class HomeScreen: UIViewController {
         if viewModel.appPhotos.contains(where: { $0.group == nil }) {
             groups.append(nil)
         }
-            
+        title = "Group Folders \(viewModel.appPhotos.count)"
         collectionView.reloadData()
     }
+    
     
     private func setupAddButton() {
         let addButton = UIButton(type: .system)
@@ -96,12 +97,17 @@ class HomeScreen: UIViewController {
                                     for asset in assets {
                                         self.viewModel.addAsset(asset, total: assets.count, progressHandler: { current, total in
                                             processed += 1
+                                            print("\(processed)/\(total)")
                                             DispatchQueue.main.async {
                                                 self.progressBar?.updateProgress(processed: processed, total: total)
+                                                if processed == total {
+                                                    self.collectionView?.reloadData()
+                                                    self.loadGroups()
+                                                }
                                             }
                                         },completion: {
                                             DispatchQueue.main.async {
-                                                self.loadGroups()
+                                                //self.loadGroups()
                                                 self.hideProgress()
                                             }
                                         })
@@ -133,12 +139,12 @@ class HomeScreen: UIViewController {
             progressBar = vc
         }
 
-        private func hideProgress() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.progressBar?.dismiss(animated: true)
-                self.progressBar = nil
-            }
+    private func hideProgress() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.progressBar?.dismiss(animated: true)
+            self.progressBar = nil
         }
+    }
     
     
     

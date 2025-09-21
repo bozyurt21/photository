@@ -66,4 +66,5 @@ class FolderCell: UICollectionViewCell {
         }
         total_count.text = "\(total) images"
     }
+    
 }
