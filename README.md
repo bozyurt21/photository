@@ -21,16 +21,67 @@ In this app, user could download their images and based on their image descripti
 
 ## Home Screen
 ### Properties:
-- collectionView : UICollectionView
-- groups : [Photo Group?]
-- viewModel : PhotoLibraryManager
-### viewDidLoad():
-Ask once when app has created in entire LifeCycle of the app so the method's inside only called once.
-#### Methods called:
-- setupCollectionView : Set the collection view UI item's property such as backgroud, delegate, dataSource and also since I wanted a custom FolderCell, I have registered FolderCell class to be created for each collectionView item.
-- 
+- **collectionView :** UICollectionView
+- **groups :** [Photo Group?]
+- **viewModel :** PhotoLibraryManager
+  
+### Methods:
+#### setupCollectionView():
+Sets the collectionView item's properties so it will be shown in the screen correctly. Also register FolderCell object to create each collectionViewCell into the way that **FolderCell** configured.
+#### loadGroups():
+Responsible to update each group object and add the photos when a new image added. Also reload the collectionView to update FolderCells as well.
+#### setupAddButton():
+Sets the add button to the end.
+#### addImageTapped():
+When user tapped the **add Image** button, addImageTapped method called to show the picker, close the picker after completion, add each asset using **addAsset** method in PhotoLibraryManager, load group's when processed finished and updates the Progress View so it will show the processed images.
+#### showProgress():
+Creates **DownloadProgressBarController** and present the created progress screen.
+#### hideProgress():
+Hides the created **DownloadProgressBarController**.
+
+### Helper Classes:
+### FolderCell:
+
+**Doesn't require ant input parameters while created.**
+
+Responsible for setting each CollectionView cell item. 
+
+#### Method
+
+**configure():** Configures folder names. 
+
+### DownloadProgressBar:
+
+**Doesn't require ant input parameters while created.**
+
+Create a Download modular screen so when user click on Add Image button, this screen will be shown until the download process ended. 
+
+#### Method
+
+**updateProgress():** Update the progress screen so the percentage progress and the text that shown how many images has processed will be shown. 
+
+### PhotoPicker:
+#### Properties
+
+- onComplete : ([PHAsset]) -> Void
+  
+Creates **PHPickerViewController**, provided by the Photos library.
+
+#### Methods:
+
+**All below has been added since they are requires by UIViewControllerRepresentable**
+
+**makeUIViewController():** Creates UIViewController object **(PHPickerViewController)** and configure its initial state.
+
+
+**updateUIViewController():** Updates the state of the UIViewController when new information added. Since it is Picker, it is going to dismissed when the items selected so it doens't have to update state therefore I have left it empty.
+
+**makeCoordinator():** Creates Coordinator
+
+**Coordinator:** Custom instance I use to communicate changes from my view controller to other parts of my code. **picker** method is responsible with fetching assets and returning the added assets.
 
 ## Group Detail Screen
+
 ## Image Detail Screen
 
 ## Step By Step Guide
