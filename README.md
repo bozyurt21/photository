@@ -20,54 +20,54 @@
 In this app, user could download their images and based on their image description value, the image is going to be assigned to folders. To be able to achieve this, I have used **PHAsset** as a pointer to the actuall image which stores the metadata information. Also used **PHImageManager** to generate preview thumbnails with given PHAsset using requestImage method. requestImage simply gave me the image representation of the given asset.
 
 ## Home Screen
-### Properties:
+## Properties:
 - **collectionView :** UICollectionView
 - **groups :** [Photo Group?]
 - **viewModel :** PhotoLibraryManager
   
-### Methods:
-#### setupCollectionView():
+## Methods:
+### setupCollectionView():
 Sets the collectionView item's properties so it will be shown in the screen correctly. Also register FolderCell object to create each collectionViewCell into the way that **FolderCell** configured.
-#### loadGroups():
+### loadGroups():
 Responsible to update each group object and add the photos when a new image added. Also reload the collectionView to update FolderCells as well.
-#### setupAddButton():
+### setupAddButton():
 Sets the add button to the end.
-#### addImageTapped():
+### addImageTapped():
 When user tapped the **add Image** button, addImageTapped method called to show the picker, close the picker after completion, add each asset using **addAsset** method in PhotoLibraryManager, load group's when processed finished and updates the Progress View so it will show the processed images.
-#### showProgress():
+### showProgress():
 Creates **DownloadProgressBarController** and present the created progress screen.
-#### hideProgress():
+### hideProgress():
 Hides the created **DownloadProgressBarController**.
 
-### Helper Classes:
-### FolderCell:
+## Helper Classes:
+## FolderCell:
 
 **Doesn't require ant input parameters while created.**
 
 Responsible for setting each CollectionView cell item. 
 
-#### Method
+### Method
 
 **configure():** Configures folder names. 
 
-### DownloadProgressBar:
+## DownloadProgressBar:
 
 **Doesn't require ant input parameters while created.**
 
 Create a Download modular screen so when user click on Add Image button, this screen will be shown until the download process ended. 
 
-#### Method
+### Method
 
 **updateProgress():** Update the progress screen so the percentage progress and the text that shown how many images has processed will be shown. 
 
-### PhotoPicker:
-#### Properties
+## PhotoPicker:
+### Properties
 
 - onComplete : ([PHAsset]) -> Void
   
 Creates **PHPickerViewController**, provided by the Photos library.
 
-#### Methods:
+### Methods:
 
 **All below has been added since they are requires by UIViewControllerRepresentable**
 
@@ -82,15 +82,61 @@ Creates **PHPickerViewController**, provided by the Photos library.
 
 ## Group Detail Screen
 
+### Properties:
+* group : PhotoGroup
+* viewModel : PhotoLibraryManager
+* **photos : [AppPhoto] (already initialized. No need to initialize again while calling this class)**
+
+Responsible for creating SwiftUI Group Detail screen where user can see the photos. PhotoView is responsible for configuring each image in the group grid. I have decided to use grid to show the images in group detail screen. When user click on any images, with using simple NavigationLink, I am forwarding the clicked PhotoView to its ImageDetailScreen. While sending to image detail screen, since I need to be able to scroll to the left and right I am sending the current index as well.
+
+## Helper Classes
+
+## PhotoView
+
+### Properties:
+* appPhoto : AppPhoto
+* viewModel: PhotoLibraryManager
+* image : UIImage
+
+Responsible for configuring the images in GroupDetail screen.
+
+### Methods:
+There is no particular method but there is a LifeCycle method initialized since each time the GroupDetailScreen open, images should be fetched from assets so I decided to use **onApear** method since it would be more suitable for this situation. I need my images to be fetch every time a new PhotoView object appear.
+
 ## Image Detail Screen
+## Properties:
+* photos: [AppPhoto]
+* startIndex : Int
+* viewModel : PhotoLibraryManager
+* **currentIndex : Int (state object to control UIChanges so each time the index of the current image change, this changes as well, no need to initialize)**
+
+Uses TabView to make the images scrollable. Each image configured using **ScreenImage**
+
+## Helper Classes:
+## ScreenImage
+### Properties:
+* appPhoto : [appPhoto]
+* viewModel : PhotoLibraryManager
+* image : UIImage?
+
+Configures each image's properties to make them full screen. Also fetches images when each ScreenImage view appear usinf the LifeCycle method onAppear, same as PhotoView.
+
+## General Classes That Used In Nearly Every Object
+
+## PhotoLibraryManager
+### Properties:
+* appPhotos : [AppPhoto]
+* storageURL : URL
+* **processed : Int already initialized, no need to reinitialize)**
+* 
 
 ## Step By Step Guide
 
-### 1. Fetching Images
+## 1. Fetching Images
 
 First, I have started with adding a simple button and a Scrollable Lazy Grid View to show each images downloaded by the user using another view called **PhotoView**. PhotoView determined how the images are going to be shown on the screen such as their sizes etc. and since image is an optional, there is a probability that the image might not exist which in this case shows gray color instead. Since we need to fetch the images from our JSON file, PhotoView calls **PhotoLibraryManager ViewModel's fetchImage method**. It is calling on the **onApper** because user must have seen the result on each time the PhotoView is appeared in screen rather than just when screen created or while it is dissapearing.
 
-### 2. Downloading Images
+## 2. Downloading Images
 
 When user click on the **+Add Photo** button, the sheet consisted of their gallery image is presented. It was necessary because otherwise user couldn't be able to pick photos from their gallery. Since the user should be able to pick their images in a view like object, I have added the **UIViewControllerRepresentabl**e protocole to **PhotoPicker**. **UIViewControllerRepresentable** protocol requires methods like **makeUIViewController**, **updateUIViewController** and **makeCoordinator** and a **Cordinator** class that has a **PHPickerViewControllerDelegate** method which responds to **PHPickerViewController** and knows when it is completed. On the closure, we are calling **PhotoLibraryManager ViewModel**'s **addAsset** method to be able to add asset to our JSON file so when the image has saved, even when user destroys the app it stays. 
 
@@ -98,7 +144,7 @@ addAsset method creates a new AppPhoto object which stores the information about
 
 **savePhotos** takes each AppPhoto object's id and put it in identifiers array so it will write it down to a JSON file to store the identifiers (id's) of the object so whe I called **loadPhotos** method (which is called in init method of PhotoLibraryManager and since it is declared as **StateObject** which means it is called every time the published property changed which is appPhotos or the identity of the view changes instead of every time the new input added to the view.) it creates PHAsset's using their identifier. Therefore, the images restored by the app itself.  
 
-### 3. Grouping Images
+## 3. Grouping Images
 
 After I have managed to download images, it was time to start working on grouping them and also putting those group folders in home screen so when user click on each group folder, they would see the images in that specific group. While downloading and fetching images I have worked on GroupDetailScreen since for now, there was no groups existed and I have just checked the fact that if I could download images or not.
 
@@ -112,7 +158,7 @@ To be able to show the groups as folders, I need to know the groups existed in a
 
 Then it was time to send the photos to their designated **GroupDetailScreen**. To manage that, I have used **UIHostingController** since I was going to navigate to a SwiftUI view inside UIKit view and change the root from homeScreen to GroupDetailScreen. I have also sended the group name to GroupDetailScreen while navigating since I must see the photo's in certain group and used this group information to filter the photos to be shown inside the folder. Since I have added other as nil, I have used optional group name and determined the charatheristic based on that. Since the groupDetail must be send when a folder is clicked, I have used used **delegate** methods so each time user clicked on any folder, this information would be send to the GroupDetailScreen and it will navigate to that screen as well.
 
-### 4. Image Detail Screen
+## 4. Image Detail Screen
 
 After I have successfully manage to group images, it was time for me to work on image detail screen. Since both GroupDetailScreen and ImageDetailScreen were SwiftUI views, I have used NavigationLink directly to navigate in between. Therefore each time user click on image, the app navigate to ImageDetailScreen. In ImageDetailScreen, I have used TabView, since the images should be scrollable. To be able to do that, I needed to know the current index of the image in Photo's array so I have used enumerator method to gave me tuple of indexes and AppPhoto's as well but since enumerator method's output is not identifieable, I needed to declare that each element's id is their own identifier both in GroupDetailScreen and ImageDetailScreen since I should know the start index as well which is going to be sent by the GroupDetailScreen to ImageDetailScreen.
 
