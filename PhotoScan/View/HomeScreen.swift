@@ -67,10 +67,13 @@ class HomeScreen: UIViewController {
     
     private func setupAddButton() {
         let addButton = UIButton(type: .system)
-        addButton.setTitle("+ Add Images", for: .normal)
+        addButton.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+        addButton.tintColor = .white
         addButton.setTitleColor(.white, for: .normal)
         addButton.backgroundColor = UIColor(named: "mainColor")
-        addButton.layer.cornerRadius = 12
+        addButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        addButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        addButton.layer.cornerRadius = 25
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.addTarget(self, action: #selector(addImageTapped), for: .touchUpInside)
 
