@@ -2,16 +2,16 @@
 
 <h3 align="left">Contents</h3>
 
--  [App Description]("app-description")
--  [Home Screen]("home-screen")
--  [Group Detail Screen]("group-detail-screen")
--  [Image Detail Screen]("image-detail-screen")
--  [Step By Step Guide]("step-by-step-guide")
-    * [1. Fetching Images]("1.fetching-images")
-    * [2. Downloading Images]("2.downloading-images")
-    * [3. Grouping Images]("3.grouping-images")
-    * [4. Image Detail Screen]("4.image-detail-screen")
-    * [5. Showing Downloading Process]("5.showing-downloading-process")
+-  [App Description](#app-description)
+-  [Home Screen](#home-screen)
+-  [Group Detail Screen](#group-detail-screen)
+-  [Image Detail Screen](#image-detail-screen)
+-  [Step By Step Guide](#step-by-step-guide)
+    * [1. Fetching Images](#1-fetching-images)
+    * [2. Downloading Images](#2-downloading-images)
+    * [3. Grouping Images](#3-grouping-images)
+    * [4. Image Detail Screen](#4-image-detail-screen)
+    * [5. Showing Downloading Process](#5-showing-downloading-process)
    
 
 
