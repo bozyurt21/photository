@@ -7,11 +7,11 @@
 -  [Group Detail Screen]("group-detail-screen")
 -  [Image Detail Screen]("image-detail-screen")
 -  [Step By Step Guide]("step-by-step-guide")
-    * [Fetching Images]("fetching-images")
-    * [Downloading Images]("downloading-images")
-    * [Grouping Images]("grouping-images")
-    * [Image Detail Screen]("image-detail-screen")
-    * [Showing Downloading Process]("showing-downloading-process")
+    * [1. Fetching Images]("1.fetching-images")
+    * [2. Downloading Images]("2.downloading-images")
+    * [3. Grouping Images]("3.grouping-images")
+    * [4. Image Detail Screen]("4.image-detail-screen")
+    * [5. Showing Downloading Process]("5.showing-downloading-process")
    
 
 
@@ -128,7 +128,32 @@ Configures each image's properties to make them full screen. Also fetches images
 * appPhotos : [AppPhoto]
 * storageURL : URL
 * **processed : Int already initialized, no need to reinitialize)**
-* 
+
+Responisible for implenting properties and commands to notifies view of any state changes.
+
+### Methods:
+### init()
+Initialize the file manager and create url to store to know where the data is so it can access it later and loads photos.
+
+### addAsset(_ asset: PHAsset, total: Int, progressHandler: @escaping (Int, Int)->Void, completion: @escaping () -> Void)
+Used to add new PHAsset's as **AppPhoto**, creates reliable hashes to group the added asset, add necessary parts to store the photo in JSON file such as its local identifier and group info. Also sends the information about the added asset numbers so the download progress bar would know how much assets added and finished the download progress on regards to that. Also saves the requested asset information to JSON file using **savePhotos** method.
+
+### savePhotos()
+Saves the created assets to JSON file using the AppPhoto object that stores the required information.
+
+### loadPhotos()
+Load the photos saved in JSON file for user to be able to see.
+
+### fetchImage(for appPhoto: AppPhoto,targetSize: CGSize, completion: @escaping (UIImage?) -> Void)
+fetches the AppPhoto image from local gallery since the information we store in JSON file is just the local identification of the image, meaning just the pointer object not the actual image. So this methods fetches the actual image from the local gallery.
+
+## AppPhoto
+### Properties
+* id : String
+* group : PhotoGroup?
+
+This is just an object to store the PHAsset pointer information to be able to reach to the actual image later and to be able to store the information in JSON file.
+
 
 ## Step By Step Guide
 
@@ -161,5 +186,9 @@ Then it was time to send the photos to their designated **GroupDetailScreen**. T
 ## 4. Image Detail Screen
 
 After I have successfully manage to group images, it was time for me to work on image detail screen. Since both GroupDetailScreen and ImageDetailScreen were SwiftUI views, I have used NavigationLink directly to navigate in between. Therefore each time user click on image, the app navigate to ImageDetailScreen. In ImageDetailScreen, I have used TabView, since the images should be scrollable. To be able to do that, I needed to know the current index of the image in Photo's array so I have used enumerator method to gave me tuple of indexes and AppPhoto's as well but since enumerator method's output is not identifieable, I needed to declare that each element's id is their own identifier both in GroupDetailScreen and ImageDetailScreen since I should know the start index as well which is going to be sent by the GroupDetailScreen to ImageDetailScreen.
+
+## 5. Showing Downloading Process
+
+When ImageDetailScreen impelentation has done, I have decided to work on download progress bar. I wanted it to be shown on the screen when user add image so I have started implementing it on Home Screen. First, I have started with adding image count informations below the folders so it would be easier for me to track down if the download progress bar works correctly. After I finished configuring the download progress bar view, I have started on working how can I add it. I knew I needed to know the total images selected from the picker so I needed to show the progress bar when user selected the images from the picker. First, I have tried to implemented it in the picker method updateUIViewController since it would be called when the state of the picker has changed but it did not worked since when I call it, the picker was already dismissed. Then I have realized, I am already calling the picker on HomeScreen and if I would add the total count to add assets then I could update the progress bar using progressHandler with the information of assets added and the total assets selected. So progressHandler function will take the inputs, inform the functions inside about the change. Since the progress finished when all the images processed, it is not synchronious function, I need to update the progress for every image added not just for one image. The problems I encounter while implementing the functionality were when I added the second time, since at first I was tracking the image added by counting the images in photos, it was not been able to complete because processed and total were never become equal. I have decided to use a private processed instance in PhotoLibraryManager instead and track down the images that proceed by adding one. Even though it solves the problem I was having with adding images second time, it was not being able to solve the problem of adding same images for the second time. Since I was increasing the number of items that proceed when I add a new item, it was not being able to equal to total still so I have decided to add one to proceed anyway and when I done it, it had solved the problem but then I have realized, even though the downloaded ended, the group counts info was not updated unless I reopen the app which means the collection view and group's reloaded which wasn't happening after I have added the images since I was not calling the function inside the progressHandler clousure. When I added the functions inside the clousure, the app was working as I intended.
 
 
