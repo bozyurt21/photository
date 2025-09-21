@@ -97,7 +97,6 @@ class HomeScreen: UIViewController {
                                     for asset in assets {
                                         self.viewModel.addAsset(asset, total: assets.count, progressHandler: { current, total in
                                             processed += 1
-                                            print("\(processed)/\(total)")
                                             DispatchQueue.main.async {
                                                 self.progressBar?.updateProgress(processed: processed, total: total)
                                                 self.collectionView?.reloadData()
