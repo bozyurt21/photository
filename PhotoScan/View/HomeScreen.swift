@@ -98,9 +98,9 @@ class HomeScreen: UIViewController {
                                 self.showProgress(total: assets.count)
                                 DispatchQueue.global(qos: .userInitiated).async {
                                     for asset in assets {
-                                        self.viewModel.addAsset(asset, total: assets.count, progressHandler: { current, total in
+                                        self.viewModel.addAsset(asset, total: assets.count, progressHandler: { processed, total in
                                             DispatchQueue.main.async {
-                                                self.progressBar?.updateProgress(processed: current, total: total)
+                                                self.progressBar?.updateProgress(processed: processed, total: total)
                                                 self.collectionView?.reloadData()
                                                 self.loadGroups()
                                             }
