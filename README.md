@@ -34,7 +34,7 @@ Responsible to update each group object and add the photos when a new image adde
 Sets the add button to the end.
 ### addImageTapped():
 When user tapped the **add Image** button, addImageTapped method called to show the picker, close the picker after completion, add each asset using **addAsset** method in PhotoLibraryManager, load group's when processed finished and updates the Progress View so it will show the processed images.
-### showProgress():
+### showProgress(total: Int):
 Creates **DownloadProgressBarController** and present the created progress screen.
 ### hideProgress():
 Hides the created **DownloadProgressBarController**.
@@ -48,7 +48,7 @@ Responsible for setting each CollectionView cell item.
 
 ### Method
 
-**configure():** Configures folder names. 
+**configure(with group: PhotoGroup?, total: Int):** Configures folder names. 
 
 ## DownloadProgressBar:
 
@@ -58,7 +58,8 @@ Create a Download modular screen so when user click on Add Image button, this sc
 
 ### Method
 
-**updateProgress():** Update the progress screen so the percentage progress and the text that shown how many images has processed will be shown. 
+### updateProgress(processed: Int, total: Int):
+Update the progress screen so the percentage progress and the text that shown how many images has processed will be shown. 
 
 ## PhotoPicker:
 ### Properties
@@ -71,14 +72,18 @@ Creates **PHPickerViewController**, provided by the Photos library.
 
 **All below has been added since they are requires by UIViewControllerRepresentable**
 
-**makeUIViewController():** Creates UIViewController object **(PHPickerViewController)** and configure its initial state.
+### makeUIViewController(context: Context) -> PHPickerViewController:
+Creates UIViewController object **(PHPickerViewController)** and configure its initial state.
 
 
-**updateUIViewController():** Updates the state of the UIViewController when new information added. Since it is Picker, it is going to dismissed when the items selected so it doens't have to update state therefore I have left it empty.
+### updateUIViewController(_ uiViewController: PHPickerViewController, context: Context): 
+Updates the state of the UIViewController when new information added. Since it is Picker, it is going to dismissed when the items selected so it doens't have to update state therefore I have left it empty.
 
-**makeCoordinator():** Creates Coordinator
+### makeCoordinator() -> Coordinator: 
+Creates Coordinator
 
-**Coordinator:** Custom instance I use to communicate changes from my view controller to other parts of my code. **picker** method is responsible with fetching assets and returning the added assets.
+## Coordinator: 
+Custom class that I use to communicate changes from my view controller to other parts of my code. **picker** method is responsible with fetching assets and returning the added assets.
 
 ## Group Detail Screen
 
@@ -86,6 +91,7 @@ Creates **PHPickerViewController**, provided by the Photos library.
 * group : PhotoGroup
 * viewModel : PhotoLibraryManager
 * **photos : [AppPhoto] (already initialized. No need to initialize again while calling this class)**
+* **animate : Boolean = false (already initialized. No need to initialize again while calling this class)**
 
 Responsible for creating SwiftUI Group Detail screen where user can see the photos. PhotoView is responsible for configuring each image in the group grid. I have decided to use grid to show the images in group detail screen. When user click on any images, with using simple NavigationLink, I am forwarding the clicked PhotoView to its ImageDetailScreen. While sending to image detail screen, since I need to be able to scroll to the left and right I am sending the current index as well.
 
@@ -127,7 +133,8 @@ Configures each image's properties to make them full screen. Also fetches images
 ### Properties:
 * appPhotos : [AppPhoto]
 * storageURL : URL
-* **processed : Int already initialized, no need to reinitialize)**
+* **processed : Int (already initialized, no need to reinitialize)**
+* **alreadyProcessed : Int (already initialized, no need to reinitialize)**
 
 Responisible for implenting properties and commands to notifies view of any state changes.
 
@@ -191,4 +198,8 @@ After I have successfully manage to group images, it was time for me to work on 
 
 When ImageDetailScreen impelentation has done, I have decided to work on download progress bar. I wanted it to be shown on the screen when user add image so I have started implementing it on Home Screen. First, I have started with adding image count informations below the folders so it would be easier for me to track down if the download progress bar works correctly. After I finished configuring the download progress bar view, I have started on working how can I add it. I knew I needed to know the total images selected from the picker so I needed to show the progress bar when user selected the images from the picker. First, I have tried to implemented it in the picker method updateUIViewController since it would be called when the state of the picker has changed but it did not worked since when I call it, the picker was already dismissed. Then I have realized, I am already calling the picker on HomeScreen and if I would add the total count to add assets then I could update the progress bar using progressHandler with the information of assets added and the total assets selected. So progressHandler function will take the inputs, inform the functions inside about the change. Since the progress finished when all the images processed, it is not synchronious function, I need to update the progress for every image added not just for one image. The problems I encounter while implementing the functionality were when I added the second time, since at first I was tracking the image added by counting the images in photos, it was not been able to complete because processed and total were never become equal. I have decided to use a private processed instance in PhotoLibraryManager instead and track down the images that proceed by adding one. Even though it solves the problem I was having with adding images second time, it was not being able to solve the problem of adding same images for the second time. Since I was increasing the number of items that proceed when I add a new item, it was not being able to equal to total still so I have decided to add one to proceed anyway and when I done it, it had solved the problem but then I have realized, even though the downloaded ended, the group counts info was not updated unless I reopen the app which means the collection view and group's reloaded which wasn't happening after I have added the images since I was not calling the function inside the progressHandler clousure. When I added the functions inside the clousure, the app was working as I intended.
 
+## Features I Wanted To Add But Couldn't Find The Time
+- I wanted to add a feature for users to be able to add notes to each images so they would know what happened in that certain image and when they look back, they would have more clear idea about the time. I remember when I was kid, I used to nagged my mom and dad about the persons in the picture or what they were doing there and they would almost always forget and the memory that they have taken to make it immportal was died along. I believed thi would make the app more personal and touched. 
+
+- I also wanted to add a button for user to be able to delete the image from the app, even though it would be easy, I couldn't think of a way to implement the functionality. I was thinking of adding a delete button on the PhotoView and add the functionality to delete the photo from the photos and also reload the app but I believed this would be less impressive and hard to use since user must be able to delete more than one item so it means I need to use a picker.
 
