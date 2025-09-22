@@ -18,8 +18,8 @@ struct PhotoView: View {
             if let image = image {
                 Image(uiImage: image)
                     .resizable()
-                    .scaledToFill()     // fill the frame
-                    .frame(width: 120, height: 200) // make all cells equal
+                    .scaledToFill()
+                    .frame(width: 120, height: 200) 
                     .clipped()
                     .cornerRadius(10)
                 }
