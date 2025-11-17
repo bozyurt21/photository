@@ -37,6 +37,20 @@
 			);
 			target = 1D48737A2E781EE6006CF16F /* PhotoScan */;
 		};
+		1D89F2162ECBBC5D001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/PhotoStorage.xcdatamodeld,
+			);
+			target = 1D4873872E781EE8006CF16F /* PhotoScanTests */;
+		};
+		1D89F2172ECBBC5D001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/PhotoStorage.xcdatamodeld,
+			);
+			target = 1D4873912E781EE8006CF16F /* PhotoScanUITests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +58,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				1D4874172E78B26E006CF16F /* Exceptions for "PhotoScan" folder in "PhotoScan" target */,
+				1D89F2162ECBBC5D001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanTests" target */,
+				1D89F2172ECBBC5D001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanUITests" target */,
 			);
 			path = PhotoScan;
 			sourceTree = "<group>";
