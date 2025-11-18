@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GroupDetailScreen: View {
     let group: PhotoGroup?
+    let photos : [AppPhoto]
     @ObservedObject var viewModel: PhotoLibraryManager
     @State private var animate = false
     
@@ -18,15 +19,6 @@ struct GroupDetailScreen: View {
             GridItem(.fixed(120))
     ]
     
-    // Filtering Photos in here
-    var photos : [AppPhoto] {
-        if let group = group {
-            return viewModel.appPhotos.filter { $0.group == group }
-        }
-        else {
-            return viewModel.appPhotos.filter { $0.group == nil}
-        }
-    }
     
     var body: some View {
         ScrollView {
@@ -52,7 +44,7 @@ struct GroupDetailScreen: View {
                 .onAppear {
                     animate = true}
                 }
-        .navigationTitle("\(group?.rawValue.uppercased() ?? "Others")  (\(photos.count) images)")
+        .navigationTitle("\(group?.rawValue ?? "Other")  (\(photos.count) images)")
     }
         
 }
