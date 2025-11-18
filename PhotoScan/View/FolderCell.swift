@@ -59,10 +59,10 @@ class FolderCell: UICollectionViewCell {
     
     func configure(with group: PhotoGroup?, total: Int) {
         if let group = group {
-            titleLabel.text = group.rawValue.uppercased()
+            titleLabel.text = group.rawValue
         }
         else {
-            titleLabel.text = "Others"
+            titleLabel.text = "Other"
         }
         total_count.text = "\(total) images"
     }
