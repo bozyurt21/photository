@@ -28,7 +28,8 @@ struct PhotoPicker: UIViewControllerRepresentable {
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-
+    
+    // MARK: Coordinator for PhotoPicker
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
         let parent: PhotoPicker
 

@@ -8,28 +8,30 @@
 import SwiftUI
 
 struct GroupDetailScreen: View {
-    let group: PhotoGroup?
-    let photos : [AppPhoto]
-    @ObservedObject var viewModel: PhotoLibraryViewModel
+    let group : PhotoGroup?
     @State private var animate = false
-    
+    @Environment(\.presentationMode) private var presentationMode
+    @StateObject private var viewModel : GroupDetailViewModel
     private let flexibleColumn = [
             GridItem(.fixed(120)),
             GridItem(.fixed(120)),
             GridItem(.fixed(120))
     ]
     
+    init(group: PhotoGroup?, photos: [AppPhoto]) {
+        self.group = group
+        _viewModel = StateObject(wrappedValue: GroupDetailViewModel(group: group, appPhotos: photos))
+    }
     
     var body: some View {
         ScrollView {
                 LazyVGrid(columns: flexibleColumn, spacing: 10) {
-                    ForEach(0..<photos.count, id: \.self) { (index) in
-                            let appPhoto = photos[index]
+                    ForEach(Array(viewModel.appPhotos.enumerated()), id: \.element.objectID) { (index, appPhoto) in
                             NavigationLink {
-                                ImageDetailScreen(photos: photos, startIndex: index, viewModel: viewModel)
+                                ImageDetailScreen(photos: viewModel.appPhotos, startIndex: index)
                             }
                             label: {
-                                PhotoView(appPhoto: appPhoto, viewModel: viewModel)
+                                PhotoView(appPhoto: appPhoto)
                                     .opacity(animate ? 1 : 0)
                                     .offset(y: animate ? 0 : 20)
                                     .animation(
@@ -38,13 +40,32 @@ struct GroupDetailScreen: View {
                                          value: animate
                                     )
                                 }
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    viewModel.deletePhoto(appPhoto: appPhoto)
+                                    
+                                    if viewModel.appPhotos.isEmpty {
+                                        presentationMode.wrappedValue.dismiss()
+                                    }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
                             }
+                    }
+                            
                 }
                 .onAppear {
-                    animate = true}
+                    animate = true
                 }
-        .navigationTitle("\(group?.rawValue ?? "Other")  (\(photos.count) images)")
-    }
+                }
+                .navigationTitle("\(group?.rawValue ?? "Other")  (\(viewModel.appPhotos.count) images)")
+                .onChange(of: viewModel.appPhotos.count) { newCount in
+                    if newCount == 0 {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    animate = true
+                }
+        }
         
 }
 

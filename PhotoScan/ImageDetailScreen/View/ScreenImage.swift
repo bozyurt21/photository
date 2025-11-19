@@ -9,10 +9,10 @@ import SwiftUI
 
 struct ScreenImage: View {
     let appPhoto: AppPhoto
-    @ObservedObject var viewModel: PhotoLibraryViewModel
+    @ObservedObject var viewModel: PhotoLibraryViewModel = PhotoLibraryViewModel()
     @State private var image: UIImage?
     var body: some View {
-        ZStack {
+        VStack {
             if let image = image {
                 Image(uiImage: image)
                     .resizable()
@@ -21,6 +21,7 @@ struct ScreenImage: View {
             else {
                 ProgressView()
             }
+            Text("Creation Date: \(appPhoto.creationDate?.description ?? "")")
         }
         .onAppear {
             viewModel.fetchImage(for: appPhoto, targetSize: CGSize(width: 1000, height: 1000)) { img in
