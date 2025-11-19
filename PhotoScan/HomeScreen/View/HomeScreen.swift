@@ -14,17 +14,18 @@ class HomeScreen: UIViewController {
     
     private var collectionView: UICollectionView!
     private var groups: [PhotoGroup?] = []
-    private let viewModel = PhotoLibraryManager()
+    private let viewModel = HomeViewModel()
     private var progressBar : DownloadProgressBarController?
     private var photosForGroup : [AppPhoto]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Group Folders (total: \(viewModel.appPhotos.count) images)"
+        viewModel.delegate = self
+        title = "Group Folders (total: \(viewModel.totalPhotoCount) images)"
         view.backgroundColor = .systemBackground
         setupCollectionView()
-        loadGroup()
         setupAddButton()
+        viewModel.loadGroups()
     }
     
     private func setupCollectionView() {
@@ -82,32 +83,7 @@ class HomeScreen: UIViewController {
                 DispatchQueue.main.async {
                     let picker = PhotoPicker { assets in
                         self.dismiss(animated: true) {
-                            if assets.count > 0 {
-                                self.showProgress(total: assets.count)
-                                DispatchQueue.global(qos: .userInitiated).async {
-                                    for asset in assets {
-                                        self.viewModel.addAsset(asset, total: assets.count, progressHandler: { processed, total in
-                                            DispatchQueue.main.async {
-                                                self.progressBar?.updateProgress(processed: processed, total: total)
-                                                self.collectionView?.reloadData()
-                                                self.loadGroup()
-                                            }
-                                        },completion: {
-                                            DispatchQueue.main.async {
-                                                self.hideProgress()
-                                            }
-                                        })
-                                        
-                                    }
-                                    
-                                }
-                            }
-                            else {
-                                if self.progressBar != nil {
-                                    self.hideProgress()
-                                }
-                            }
-                            
+                            self.viewModel.importAsset(assets)
                         }
                     }
                     let hostingPicker = UIHostingController(rootView: picker)
@@ -133,19 +109,6 @@ class HomeScreen: UIViewController {
             self.progressBar = nil
         }
     }
-    private func loadGroup() {
-        
-        groups = viewModel.appPhotos.compactMap { PhotoGroup.group(for: $0.groupHash)}.reduce(into: Set<PhotoGroup>()) { $0.insert($1) }
-            .sorted { $0.rawValue < $1.rawValue }
-                    
-        if viewModel.appPhotos.contains(where: { PhotoGroup.group(for:$0.groupHash) == nil}) {
-            groups.append(nil)
-        }
-        title = "Group Folders \(viewModel.appPhotos.count)"
-        collectionView.reloadData()
-    }
-    
-    
 }
 
 extension HomeScreen : UICollectionViewDataSource, UICollectionViewDelegate {
@@ -158,23 +121,35 @@ extension HomeScreen : UICollectionViewDataSource, UICollectionViewDelegate {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FolderCell", for: indexPath) as! FolderCell
         let group = groups[indexPath.row]
-        let totalForThisGroup: Int
-        if let g = group {
-            totalForThisGroup = viewModel.appPhotos.filter { $0.groupName == g.rawValue}.count
-        } else {
-            totalForThisGroup = viewModel.appPhotos.filter { $0.groupName == "Other"}.count
-        }
+        let totalForThisGroup = viewModel.photoCountForGroup(for: group)
         cell.configure(with: group, total: totalForThisGroup)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedGroup = groups[indexPath.row]
-        photosForGroup = viewModel.loadPhotosForGroups(for: selectedGroup?.rawValue ?? "Other")
-        let detailView = GroupDetailScreen(group: selectedGroup, photos: photosForGroup!, viewModel: viewModel)
+        photosForGroup = viewModel.photosForGroup(for: selectedGroup)
+        let detailView = GroupDetailScreen(group: selectedGroup, photos: photosForGroup!, viewModel: PhotoLibraryViewModel())
         
         let hostingController = UIHostingController(rootView: detailView)
         navigationController?.pushViewController(hostingController, animated: true)
+    }
+}
+
+extension HomeScreen : HomeViewModelDelegate {
+    func homeViewModelDidUpdateGroups(_ viewModel: HomeViewModel) {
+        groups = viewModel.groups
+        collectionView.reloadData()
+        
+    }
+    func homeViewModelDidStartImport(_ viewModel: HomeViewModel, total: Int) {
+        showProgress(total: total)
+    }
+    func homeViewModel(_ viewModel: HomeViewModel, didUpdateProgress processed: Int, total: Int) {
+        progressBar?.updateProgress(processed: processed, total: total)
+    }
+    func homeViewModelDidFinishImport(_ viewModel: HomeViewModel) {
+        hideProgress()
     }
 }
 

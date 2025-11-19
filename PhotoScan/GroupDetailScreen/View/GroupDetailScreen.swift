@@ -10,7 +10,7 @@ import SwiftUI
 struct GroupDetailScreen: View {
     let group: PhotoGroup?
     let photos : [AppPhoto]
-    @ObservedObject var viewModel: PhotoLibraryManager
+    @ObservedObject var viewModel: PhotoLibraryViewModel
     @State private var animate = false
     
     private let flexibleColumn = [
@@ -23,8 +23,8 @@ struct GroupDetailScreen: View {
     var body: some View {
         ScrollView {
                 LazyVGrid(columns: flexibleColumn, spacing: 10) {
-                    ForEach(Array(photos.enumerated()), id: \.element.id) { (index, appPhoto) in
-                        VStack {
+                    ForEach(0..<photos.count, id: \.self) { (index) in
+                            let appPhoto = photos[index]
                             NavigationLink {
                                 ImageDetailScreen(photos: photos, startIndex: index, viewModel: viewModel)
                             }
@@ -39,7 +39,6 @@ struct GroupDetailScreen: View {
                                     )
                                 }
                             }
-                        }
                 }
                 .onAppear {
                     animate = true}

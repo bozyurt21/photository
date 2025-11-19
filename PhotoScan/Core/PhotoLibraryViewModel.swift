@@ -10,7 +10,7 @@ import Photos
 import SwiftUI
 import CoreData
 
-class PhotoLibraryManager : ObservableObject {
+class PhotoLibraryViewModel : ObservableObject {
     @Published var appPhotos: [AppPhoto] = []
     
     private let context: NSManagedObjectContext

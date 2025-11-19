@@ -10,10 +10,10 @@ import SwiftUI
 struct ImageDetailScreen: View {
     let photos: [AppPhoto]
     let startIndex: Int
-    @ObservedObject var viewModel: PhotoLibraryManager
+    @ObservedObject var viewModel: PhotoLibraryViewModel
     @State private var currentIndex: Int
 
-    init(photos: [AppPhoto], startIndex: Int, viewModel: PhotoLibraryManager) {
+    init(photos: [AppPhoto], startIndex: Int, viewModel: PhotoLibraryViewModel) {
         self.photos = photos
         self.startIndex = startIndex
         self.viewModel = viewModel
