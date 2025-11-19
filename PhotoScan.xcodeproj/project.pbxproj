@@ -40,14 +40,16 @@
 		1D89F2862ECCC115001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Model/PhotoStorage.xcdatamodeld,
+				Core/Model/PhotoStorage.xcdatamodeld,
+				HomeScreen/ViewModel/HomeViewModel.swift,
 			);
 			target = 1D4873872E781EE8006CF16F /* PhotoScanTests */;
 		};
 		1D89F2872ECCC115001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Model/PhotoStorage.xcdatamodeld,
+				Core/Model/PhotoStorage.xcdatamodeld,
+				HomeScreen/ViewModel/HomeViewModel.swift,
 			);
 			target = 1D4873912E781EE8006CF16F /* PhotoScanUITests */;
 		};

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ScreenImage: View {
     let appPhoto: AppPhoto
-    @ObservedObject var viewModel: PhotoLibraryManager
+    @ObservedObject var viewModel: PhotoLibraryViewModel
     @State private var image: UIImage?
     var body: some View {
         ZStack {
