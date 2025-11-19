@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImageDetailScreen: View {
-    let photos: [AppPhoto]
+    var photos: [AppPhoto]
     let startIndex: Int
     @State private var currentIndex: Int
 

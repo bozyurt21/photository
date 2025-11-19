@@ -31,6 +31,8 @@ class HomeScreen: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel.loadGroups()
+        viewModel.loadPhotos()
+        title = "Group Folders (total: \(viewModel.totalPhotoCount) images)"
     }
     // MARK: Setting Collection View
     private func setupCollectionView() {

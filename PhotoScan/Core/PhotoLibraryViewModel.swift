@@ -99,7 +99,7 @@ class PhotoLibraryViewModel : ObservableObject {
             Input -> None
             Output-> None
      */
-    private func loadPhotos() {
+    func loadPhotos() {
         let request : NSFetchRequest<AppPhoto> = AppPhoto.fetchRequest() // request every AppPhoto
         do {
             let result = try context.fetch(request) // fetch it from the context

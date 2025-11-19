@@ -95,6 +95,10 @@ class HomeViewModel {
         }
         delegate?.homeViewModelDidUpdateGroups(self)
     }
+    
+    func loadPhotos() {
+        photoLibrary.loadPhotos()
+    }
     // MARK: Inserting Asset
     // Imports the image asset to the appPhotos
     /*
