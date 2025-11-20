@@ -9,6 +9,7 @@ import Foundation
 import Photos
 import SwiftUI
 import CoreData
+import os
 
 class PhotoLibraryViewModel : ObservableObject {
     @Published var appPhotos: [AppPhoto] = []
@@ -70,7 +71,7 @@ class PhotoLibraryViewModel : ObservableObject {
         do {
             try context.save()
         }catch {
-            print("Error while saving context")
+            NSLog("Error while saving context", error.localizedDescription)
         }
     }
     // Deletes Photo from Core Data
@@ -117,7 +118,7 @@ class PhotoLibraryViewModel : ObservableObject {
             self.appPhotos = result //load added photos to appPhoto array
             // DO NOT APPEND!! The reason we reinitialize is because the we are loading the already added photos. If you add it again, there will me multiple of same photo.
         }catch { // if there is any error while fetching
-            print("Error while fetching photos")
+            NSLog("Error while fetching photos", error.localizedDescription)
             self.appPhotos = []
         }
     }
