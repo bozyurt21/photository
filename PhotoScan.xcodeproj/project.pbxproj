@@ -41,6 +41,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Core/Model/PhotoStorage.xcdatamodeld,
+				GroupDetailScreen/ViewModel/GroupDetailViewModel.swift,
 				HomeScreen/ViewModel/HomeViewModel.swift,
 			);
 			target = 1D4873872E781EE8006CF16F /* PhotoScanTests */;
@@ -49,6 +50,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Core/Model/PhotoStorage.xcdatamodeld,
+				GroupDetailScreen/ViewModel/GroupDetailViewModel.swift,
 				HomeScreen/ViewModel/HomeViewModel.swift,
 			);
 			target = 1D4873912E781EE8006CF16F /* PhotoScanUITests */;

@@ -10,7 +10,7 @@ import Photos
 
 struct PhotoView: View {
     let appPhoto: AppPhoto
-    @ObservedObject var viewModel: PhotoLibraryViewModel
+    @ObservedObject var viewModel: PhotoLibraryViewModel = PhotoLibraryViewModel()
     @State private var image: UIImage?
     
     var body: some View {
