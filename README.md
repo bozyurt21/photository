@@ -12,7 +12,6 @@ Photository is an iOS app that scans the user’s photo library, computes hash v
 - [Data Model](#data-model)
 - [Scanning & Grouping](#scanning--grouping)
 - [UI Flow](#ui-flow)
-- [Performance & Memory Considerations](#performance--memory-considerations)
 - [Potential Extensions](#potential-extensions)
 
 ---
@@ -159,15 +158,14 @@ This means:
 1. **Home Screen (UIKit)**
    - Grid of folder cells (`FolderCell`), one per group.
    - Each folder shows:
-     - Group name (or **Other**).
-     - Total number of photos in that group.
-   - Tapping a folder pushes a `UIHostingController` with `GroupDetailScreen`.
+     - Group name
+     - Total number of photos in that group
+   - Tapping a folder pushes a `UIHostingController` to `GroupDetailScreen`.
 
 2. **Group Detail (SwiftUI)**
-   - `LazyVGrid` of `PhotoView` tiles.
-   - Each tile loads a thumbnail via `PhotoLibraryViewModel.fetchImage`.
-   - Tap → navigates to `ImageDetailScreen` for that group.
-   - Long-press (context menu) → delete photo from the group.
+   - Each image loads a thumbnail using `PhotoLibraryViewModel.fetchImage`.
+   - When tapped it navigates to `ImageDetailScreen` for that group.
+   - When Long pressed, it shows delete button which delete photo from the group if it is clicked.
    - If a group becomes empty, the view dismisses, and the Home screen will no longer show that folder.
 
 3. **Image Detail (SwiftUI)**
@@ -176,24 +174,8 @@ This means:
 
 ---
 
-## Performance & Memory Considerations
-
-- Uses `PHAsset` + `PHImageManager` instead of storing image binaries in Core Data.
-- Thumbnails and full-size images are requested with explicit `targetSize` to avoid inconsitent UI design.
-- Image loading is asynchronous and on-demand in SwiftUI views (`onAppear`), so only currently visible cells allocate images.
-- The hash helper intentionally simulates processing delay; the app is designed to:
-  - Keep the UI responsive.
-  - Provide progressive feedback through the progress bar and live group updates.
-
----
-
 ## Potential Extensions:
-
-- Add unit tests for:
-  - `PhotoGroup.group(for:)` mapping.
-  - Import logic (duplicate handling, group creation).
-- Add richer metadata and search (e.g., by date range).
-- Allow users to attach notes to photos for more personal context.
+- Allow users to attach notes to photos for more personal context. (Thinking of polaroid type of Screen Image so user can add notes about the photo like it is a polaroid image)
 - Add multi-select delete on the Group Detail screen.
 
 
