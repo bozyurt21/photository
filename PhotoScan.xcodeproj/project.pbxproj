@@ -37,23 +37,31 @@
 			);
 			target = 1D48737A2E781EE6006CF16F /* PhotoScan */;
 		};
+		1D6E589D2ECFC0E700050272 /* Exceptions for "PhotoScanTests" folder in "PhotoScanTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PhotoScanTest.swift,
+			);
+			target = 1D4873872E781EE8006CF16F /* PhotoScanTests */;
+		};
+		1D6E589F2ECFC11900050272 /* Exceptions for "PhotoScanTests" folder in "PhotoScan" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				PhotoScanTest.swift,
+			);
+			target = 1D48737A2E781EE6006CF16F /* PhotoScan */;
+		};
 		1D89F2862ECCC115001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				App/CaseHelper.swift,
+				App/Persistence.swift,
 				Core/Model/PhotoStorage.xcdatamodeld,
+				Core/PhotoLibraryViewModel.swift,
 				GroupDetailScreen/ViewModel/GroupDetailViewModel.swift,
 				HomeScreen/ViewModel/HomeViewModel.swift,
 			);
 			target = 1D4873872E781EE8006CF16F /* PhotoScanTests */;
-		};
-		1D89F2872ECCC115001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Core/Model/PhotoStorage.xcdatamodeld,
-				GroupDetailScreen/ViewModel/GroupDetailViewModel.swift,
-				HomeScreen/ViewModel/HomeViewModel.swift,
-			);
-			target = 1D4873912E781EE8006CF16F /* PhotoScanUITests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -63,19 +71,22 @@
 			exceptions = (
 				1D4874172E78B26E006CF16F /* Exceptions for "PhotoScan" folder in "PhotoScan" target */,
 				1D89F2862ECCC115001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanTests" target */,
-				1D89F2872ECCC115001A52BA /* Exceptions for "PhotoScan" folder in "PhotoScanUITests" target */,
 			);
 			path = PhotoScan;
-			sourceTree = "<group>";
-		};
-		1D48738B2E781EE8006CF16F /* PhotoScanTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PhotoScanTests;
 			sourceTree = "<group>";
 		};
 		1D4873952E781EE8006CF16F /* PhotoScanUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PhotoScanUITests;
+			sourceTree = "<group>";
+		};
+		1D6E578F2ECF8CF200050272 /* PhotoScanTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1D6E589F2ECFC11900050272 /* Exceptions for "PhotoScanTests" folder in "PhotoScan" target */,
+				1D6E589D2ECFC0E700050272 /* Exceptions for "PhotoScanTests" folder in "PhotoScanTests" target */,
+			);
+			path = PhotoScanTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -109,7 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				1D48737D2E781EE6006CF16F /* PhotoScan */,
-				1D48738B2E781EE8006CF16F /* PhotoScanTests */,
+				1D6E578F2ECF8CF200050272 /* PhotoScanTests */,
 				1D4873952E781EE8006CF16F /* PhotoScanUITests */,
 				1D48737C2E781EE6006CF16F /* Products */,
 			);
@@ -142,6 +153,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				1D48737D2E781EE6006CF16F /* PhotoScan */,
+				1D6E578F2ECF8CF200050272 /* PhotoScanTests */,
 			);
 			name = PhotoScan;
 			packageProductDependencies = (
@@ -162,9 +174,6 @@
 			);
 			dependencies = (
 				1D48738A2E781EE8006CF16F /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				1D48738B2E781EE8006CF16F /* PhotoScanTests */,
 			);
 			name = PhotoScanTests;
 			packageProductDependencies = (

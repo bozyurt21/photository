@@ -11,12 +11,13 @@ import CoreData
 class GroupDetailViewModel : ObservableObject {
     let group : PhotoGroup?
     @Published var appPhotos : [AppPhoto]
-    private let context: NSManagedObjectContext = PersistenceController.shared.container.viewContext
+    private let photoLibrary : PhotoLibraryViewModel
     
     
-    init(group : PhotoGroup?, appPhotos : [AppPhoto]) {
+    init(group : PhotoGroup?, appPhotos : [AppPhoto], photoLibrary : PhotoLibraryViewModel) {
         self.group = group
         self.appPhotos = appPhotos
+        self.photoLibrary = photoLibrary
     }
     
     // Deletes Photo from Core Data
@@ -26,19 +27,8 @@ class GroupDetailViewModel : ObservableObject {
             Output-> None
      */
     func deletePhoto(appPhoto : AppPhoto) {
-        context.delete(appPhoto) //deletes app Photo.
+        photoLibrary.deletePhoto(appPhoto: appPhoto)
         appPhotos.removeAll { $0.id == appPhoto.id } // remove the app photo from the appPhoto array as well
-        saveContext()
-    }
-    
-    
-    func saveContext() {
-        do {
-            try context.save()
-        }
-        catch {
-            print("Error While Trying to Save Context")
-        }
     }
     
 }

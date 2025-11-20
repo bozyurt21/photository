@@ -13,7 +13,7 @@ import CoreData
 class PhotoLibraryViewModel : ObservableObject {
     @Published var appPhotos: [AppPhoto] = []
     
-    private let context: NSManagedObjectContext
+    let context: NSManagedObjectContext
     //private let storageURL: URL (Decided to use Core Data instead so I do not need this anymore :) )
     private var processed  = 0
     private var alreadyProcessed = 0
@@ -72,6 +72,17 @@ class PhotoLibraryViewModel : ObservableObject {
         }catch {
             print("Error while saving context")
         }
+    }
+    // Deletes Photo from Core Data
+    /*
+        Param:
+            Input -> appPhoto: AppPhoto
+            Output-> None
+     */
+    func deletePhoto(appPhoto : AppPhoto) {
+        context.delete(appPhoto) //deletes app Photo.
+        appPhotos.removeAll { $0.id == appPhoto.id } // remove the app photo from the appPhoto array as well
+        saveContext()
     }
     
     // Saves Photo's to Core Data

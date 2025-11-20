@@ -20,7 +20,7 @@ struct GroupDetailScreen: View {
     
     init(group: PhotoGroup?, photos: [AppPhoto]) {
         self.group = group
-        _viewModel = StateObject(wrappedValue: GroupDetailViewModel(group: group, appPhotos: photos))
+        _viewModel = StateObject(wrappedValue: GroupDetailViewModel(group: group, appPhotos: photos, photoLibrary: PhotoLibraryViewModel()))
     }
     
     var body: some View {
